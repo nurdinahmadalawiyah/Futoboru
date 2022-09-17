@@ -36,11 +36,11 @@ Widget customTabBar() {
     ),
     child: TabBar(
       indicator: BoxDecoration(
-        color: primaryColor,
+        color: worldCupColor,
         borderRadius: BorderRadius.circular(30),
       ),
       labelColor: backgroundColorWhite,
-      unselectedLabelColor: primaryColor,
+      unselectedLabelColor: worldCupColor,
       // isScrollable: true,
       tabs: const [
         Tab(
@@ -81,7 +81,7 @@ class _DetailContentState extends State<DetailContent> {
               end: Alignment.bottomRight,
               // stops: [0.1, 0.8],
               colors: [
-                primaryColor,
+                worldCupColor,
                 backgroundColorBlack,
               ],
             ),
@@ -122,7 +122,7 @@ class _DetailContentState extends State<DetailContent> {
               height: 40,
               child: const Icon(
                 IconlyLight.arrow_left,
-                color: primaryColor,
+                color: worldCupColor,
               ),
             ),
           ),

@@ -23,12 +23,23 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          height: 220,
-          width: 188,
-          child: SvgPicture.asset('assets/logo_splash.svg'),
-        ),
+      body: Stack(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: Image.asset(
+              'assets/background_splash.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              height: 220,
+              width: 188,
+              child: SvgPicture.asset('assets/icon_app.svg'),
+            ),
+          ),
+        ],
       ),
     );
   }

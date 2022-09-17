@@ -45,7 +45,7 @@ class StandingDetailPage extends StatelessWidget {
                   style: kSubtitle.copyWith(
                     fontWeight: semibold,
                     fontSize: 16,
-                    color: primaryColor,
+                    color: worldCupColor,
                   ),
                 ),
                 SizedBox(
@@ -112,7 +112,7 @@ class StandingDetailPage extends StatelessWidget {
             ),
             const Divider(
               thickness: 1,
-              color: primaryColor,
+              color: worldCupColor,
             ),
             Row(
               children: [

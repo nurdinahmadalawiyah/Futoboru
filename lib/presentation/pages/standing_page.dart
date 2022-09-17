@@ -35,11 +35,11 @@ class StandingPage extends StatelessWidget {
         ),
         child: TabBar(
           indicator: BoxDecoration(
-            color: primaryColor,
+            color: worldCupColor,
             borderRadius: BorderRadius.circular(30),
           ),
           labelColor: backgroundColorWhite,
-          unselectedLabelColor: primaryColor,
+          unselectedLabelColor: worldCupColor,
           // isScrollable: true,
           tabs: const [
             Tab(
@@ -127,7 +127,7 @@ class StandingPage extends StatelessWidget {
                   style: kSubtitle.copyWith(
                     fontWeight: semibold,
                     fontSize: 16,
-                    color: primaryColor,
+                    color: worldCupColor,
                   ),
                 ),
                 SizedBox(
@@ -194,7 +194,7 @@ class StandingPage extends StatelessWidget {
             ),
             const Divider(
               thickness: 1,
-              color: primaryColor,
+              color: worldCupColor,
             ),
             Row(
               children: [

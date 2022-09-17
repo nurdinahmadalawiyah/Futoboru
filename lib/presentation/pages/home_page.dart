@@ -42,9 +42,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             carousel(),
-            const SizedBox(
-              height: 10,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: images.map((e) {
@@ -116,7 +113,10 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Icon(Icons.local_fire_department_rounded),
+              const Icon(
+                Icons.local_fire_department_rounded,
+                color: primaryColor,
+              ),
               const SizedBox(
                 width: 5,
               ),
@@ -138,8 +138,11 @@ class _HomePageState extends State<HomePage> {
     return Consumer<NewsListNotifier>(
       builder: (context, data, child) {
         if (data.state == RequestState.loading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         } else if (data.state == RequestState.loaded) {
           return ListView.builder(

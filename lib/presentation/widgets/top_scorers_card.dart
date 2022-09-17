@@ -16,7 +16,7 @@ class TopScorersCard extends StatelessWidget {
       child: ListTile(
         leading: SvgPicture.asset(
           'assets/user.svg',
-          color: primaryColor,
+          color: worldCupColor,
         ),
         title: Text(
           'Cristiano Ronaldo',

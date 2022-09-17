@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:futoboru/common/constant.dart';
+import 'package:futoboru/common/state_enum.dart';
+import 'package:futoboru/presentation/provider/all_matches_notifier.dart';
+import 'package:futoboru/presentation/widgets/matches_card.dart';
 import 'package:iconly/iconly.dart';
+import 'package:provider/provider.dart';
 
-class MatchPage extends StatelessWidget {
+class MatchPage extends StatefulWidget {
   const MatchPage({Key? key}) : super(key: key);
+
+  @override
+  State<MatchPage> createState() => _MatchPageState();
+}
+
+class _MatchPageState extends State<MatchPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<AllMatchesNotifier>(context, listen: false)
+            .fetchAllMatches());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,183 +135,64 @@ class MatchPage extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          matchCardItem(context),
-          matchCardItem(context),
-          matchCardItem(context),
+          renderDataFromApi()
         ],
       ),
+    );
+  }
+
+  Widget renderDataFromApi() {
+    return Consumer<AllMatchesNotifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
     );
   }
 
   Widget contentCL(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      child: ListView(
-        children: [
-          Text(
-            'This feature is under development',
-            style: kHeading5.copyWith(color: primaryColor),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget matchCardItem(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/detail-match'),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-            color: kDavysGrey, borderRadius: BorderRadius.circular(12)),
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'GROUP A',
-                style: kSubtitle.copyWith(
-                  fontWeight: semibold,
-                  fontSize: 16,
-                  color: primaryColor,
-                ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.settings,
+              size: 200,
+              color: kGrey,
+            ),
+            Text(
+              'This feature is under development',
+              textAlign: TextAlign.center,
+              style: kHeading5.copyWith(
+                color: kGrey,
+                fontWeight: medium,
               ),
-              const Divider(
-                color: primaryColor,
-                thickness: 1,
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/qatar.png',
-                                height: 30,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Qatar',
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.end,
-                                  style: kSubtitle.copyWith(
-                                    color: backgroundColorBlack,
-                                    fontWeight: regular,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/equador.png',
-                                height: 30,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Equador',
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.end,
-                                  style: kSubtitle.copyWith(
-                                    color: backgroundColorBlack,
-                                    fontWeight: regular,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          '0',
-                          style: kHeading5.copyWith(
-                            fontSize: 24,
-                            fontWeight: semibold,
-                            color: backgroundColorBlack,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          '0',
-                          style: kHeading5.copyWith(
-                            fontSize: 24,
-                            fontWeight: semibold,
-                            color: backgroundColorBlack,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    const VerticalDivider(
-                      color: primaryColor,
-                      thickness: 1,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          '23.00',
-                          style: kSubtitle.copyWith(
-                            color: const Color(0xFFFF5C5C),
-                            fontWeight: bold,
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          '20 Nov',
-                          style: kBodyText.copyWith(
-                            color: const Color(0xFF6C6C6C),
-                          ),
-                        ),
-                        Text(
-                          'TIMED',
-                          style: kBodyText.copyWith(
-                            color: const Color(0xFFFFA800),
-                            fontWeight: bold,
-                            fontSize: 16,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

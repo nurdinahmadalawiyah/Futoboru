@@ -54,7 +54,7 @@ class NewsCard extends StatelessWidget {
                   Text(
                     news.title ?? '-',
                     style: kHeading6.copyWith(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: semibold,
                       color: backgroundColorBlack,
                     ),
@@ -65,7 +65,7 @@ class NewsCard extends StatelessWidget {
                   Text(
                     '${DateFormat.yMMMEd().format(news.publishedAt!)}, ${DateFormat.Hms().format(news.publishedAt!)}',
                     style: kHeading6.copyWith(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: regular,
                       color: kGrey,
                     ),

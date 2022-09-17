@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 // colors
 const Color backgroundColorWhite = Color(0xFFFDFEFF);
 const Color backgroundColorBlack = Color(0xFF000814);
-const Color primaryColor = Color(0xFF8E1230);
-const Color secondaryColor = Color(0xFFDAB1BB);
+const Color primaryColor = Color(0xFF006B53);
+const Color secondaryColor = Color(0xFF00FF80);
+const Color worldCupColor = Color(0xFF8E1230);
+const Color worldCupSecondaryColor = Color(0xFFDAB1BB);
 const Color kDavysGrey = Color(0xFFF3F3F3);
 const Color kGrey = Color(0xFF545454);
 
@@ -52,3 +54,8 @@ const kColorScheme = ColorScheme(
   onError: Colors.white,
   brightness: Brightness.dark,
 );
+
+extension StringCasingExtension on String {
+  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
+}

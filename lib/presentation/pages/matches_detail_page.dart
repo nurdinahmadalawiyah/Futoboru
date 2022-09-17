@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:futoboru/common/constant.dart';
+import 'package:futoboru/common/state_enum.dart';
+import 'package:futoboru/presentation/provider/finals_notifier.dart';
+import 'package:futoboru/presentation/provider/matchday1_notifier.dart';
+import 'package:futoboru/presentation/provider/matchday2_notifier.dart';
+import 'package:futoboru/presentation/provider/matchday3_notifier.dart';
+import 'package:futoboru/presentation/provider/quarter_finals_notifier.dart';
+import 'package:futoboru/presentation/provider/roundof16_notifier.dart';
+import 'package:futoboru/presentation/provider/semi_finals_notifier.dart';
+import 'package:futoboru/presentation/provider/third_place_notifier.dart';
+import 'package:futoboru/presentation/widgets/matches_card.dart';
 import 'package:iconly/iconly.dart';
+import 'package:provider/provider.dart';
 
 class MatchesDetailPage extends StatefulWidget {
   const MatchesDetailPage({
@@ -12,6 +23,22 @@ class MatchesDetailPage extends StatefulWidget {
 }
 
 class _MatchesDetailPageState extends State<MatchesDetailPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<Matchday1Notifier>(context, listen: false).fetchMatchday1();
+      Provider.of<Matchday2Notifier>(context, listen: false).fetchMatchday2();
+      Provider.of<Matchday3Notifier>(context, listen: false).fetchMatchday3();
+      Provider.of<Roundof16Notifier>(context, listen: false).fetchRoundof16();
+      Provider.of<QuarterFinalsNotifier>(context, listen: false)
+          .fetchQuarterFinals();
+      Provider.of<SemiFinalsNotifier>(context, listen: false).fetchSemiFinals();
+      Provider.of<ThirdPlaceNotifier>(context, listen: false).fetchThirdPlace();
+      Provider.of<FinalNotifier>(context, listen: false).fetchFinal();
+    });
+  }
+
   static const List<String> list = <String>[
     "Group Stage: Matchday 1",
     "Group Stage: Matchday 2",
@@ -27,238 +54,279 @@ class _MatchesDetailPageState extends State<MatchesDetailPage> {
 
   Widget renderWidget() {
     if (dropdownValue == list[0]) {
-      return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
-      );
+      return renderDataMatchday1FromApi();
     } else if (dropdownValue == list[1]) {
-      return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
-      );
+      return renderDataMatchday2FromApi();
     } else if (dropdownValue == list[2]) {
-      return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
-      );
+      return renderDataMatchday3FromApi();
     } else if (dropdownValue == list[3]) {
       return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
+        children: [renderDataRoundof16FromApi()],
       );
     } else if (dropdownValue == list[4]) {
       return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
+        children: [renderDataQuaterFinalsFromApi()],
       );
     } else if (dropdownValue == list[5]) {
       return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-          matchCardItem(),
-        ],
+        children: [renderDataSemiFinalsFromApi()],
       );
     } else if (dropdownValue == list[6]) {
       return Column(
-        children: [
-          matchCardItem(),
-          matchCardItem(),
-        ],
+        children: [renderDataThirdPlaceFromApi()],
       );
     } else {
       return Column(
-        children: [
-          matchCardItem(),
-        ],
+        children: [renderDataFinalFromApi()],
       );
     }
   }
 
-  Widget matchCardItem() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-          color: kDavysGrey, borderRadius: BorderRadius.circular(12)),
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GROUP A',
-              style: kSubtitle.copyWith(
-                fontWeight: semibold,
-                fontSize: 16,
-                color: primaryColor,
-              ),
+  Widget renderDataMatchday1FromApi() {
+    return Consumer<Matchday1Notifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-            const Divider(
-              color: primaryColor,
-              thickness: 1,
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataMatchday2FromApi() {
+    return Consumer<Matchday2Notifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-            const SizedBox(
-              height: 5,
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataMatchday3FromApi() {
+    return Consumer<Matchday3Notifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'assets/qatar.png',
-                              height: 30,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Qatar',
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.end,
-                                style: kSubtitle.copyWith(
-                                  color: backgroundColorBlack,
-                                  fontWeight: regular,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'assets/equador.png',
-                              height: 30,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Equador',
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.end,
-                                style: kSubtitle.copyWith(
-                                  color: backgroundColorBlack,
-                                  fontWeight: regular,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        '0',
-                        style: kHeading5.copyWith(
-                          fontSize: 24,
-                          fontWeight: semibold,
-                          color: backgroundColorBlack,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '0',
-                        style: kHeading5.copyWith(
-                          fontSize: 24,
-                          fontWeight: semibold,
-                          color: backgroundColorBlack,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  const VerticalDivider(
-                    color: primaryColor,
-                    thickness: 1,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        '23.00',
-                        style: kSubtitle.copyWith(
-                          color: const Color(0xFFFF5C5C),
-                          fontWeight: bold,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Text(
-                        '20 Nov',
-                        style: kBodyText.copyWith(
-                          color: const Color(0xFF6C6C6C),
-                        ),
-                      ),
-                      Text(
-                        'TIMED',
-                        style: kBodyText.copyWith(
-                          color: const Color(0xFFFFA800),
-                          fontWeight: bold,
-                          fontSize: 16,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataRoundof16FromApi() {
+    return Consumer<Roundof16Notifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataQuaterFinalsFromApi() {
+    return Consumer<QuarterFinalsNotifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataSemiFinalsFromApi() {
+    return Consumer<SemiFinalsNotifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataThirdPlaceFromApi() {
+    return Consumer<ThirdPlaceNotifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderDataFinalFromApi() {
+    return Consumer<FinalNotifier>(
+      builder: (context, data, child) {
+        if (data.state == RequestState.loading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (data.state == RequestState.loaded) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final matches = data.matches[index];
+              return MacthesCard(matches);
+            },
+            itemCount: data.matches.length,
+          );
+        } else {
+          return Center(
+            key: const Key('error_message'),
+            child: Text(data.message),
+          );
+        }
+      },
     );
   }
 
@@ -305,7 +373,9 @@ class _MatchesDetailPageState extends State<MatchesDetailPage> {
             ],
           ),
           renderWidget(),
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
         ],
       ),
     );

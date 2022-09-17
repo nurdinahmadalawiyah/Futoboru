@@ -38,7 +38,7 @@ class DetailMatchPage extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                primaryColor,
+                worldCupColor,
                 backgroundColorBlack,
               ],
             ),
@@ -160,16 +160,16 @@ class DetailMatchPage extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 5, vertical: 2),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(6),
                           color: const Color(0xFFFFE2E2),
                         ),
                         child: Text(
                           'In Play',
                           style: kHeading5.copyWith(
                             color: const Color(0xFFFF5C5C),
-                            fontSize: 16,
+                            fontSize: 12,
                           ),
                         ),
                       )
